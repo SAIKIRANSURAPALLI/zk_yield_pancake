@@ -1,152 +1,90 @@
-<div align="center">
-<h1><strong> Web3 Boilerplate </strong></h1>
+# ZK_YIELD_PANCAKe
 
-[![Stargazers](https://img.shields.io/github/stars/Pedrojok01/Web3-Boilerplate)](https://github.com/Pedrojok01/Web3-Boilerplate/stargazers)
-[![Forks](https://img.shields.io/github/forks/Pedrojok01/Web3-Boilerplate)](https://github.com/Pedrojok01/Web3-Boilerplate/issues)
-[![Issues](https://img.shields.io/github/issues/Pedrojok01/Web3-Boilerplate)](https://github.com/Pedrojok01/Web3-Boilerplate/issues)
-[![MIT License](https://img.shields.io/github/license/Pedrojok01/Web3-Boilerplate)](https://github.com/Pedrojok01/Web3-Boilerplate/blob/main/License)
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/pierre-e/)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/3c3b76de-6191-4ab2-b2c6-a5d824f6fe2f/deploy-status)](https://app.netlify.com/sites/web3-boilerplate/deploys)
+## Overview
 
-<br></br>
+The Combined Yield Manager is a React-based web application that integrates functionality for interacting with a Yield Manager smart contract on the blockchain. It provides an interface for signing messages, managing yield allocations, updating price limits, and withdrawing from pools.
 
-![Preview](./src/assets/images/preview.gif)
+## Features
 
-</div>
+- Sign messages using Web3 wallet integration
+- View current yield allocations across different pools
+- Update price limits for yield management
+- Withdraw funds from specific pools
+- Responsive design using Ant Design components
 
-## Update:
+## Prerequisites
 
-2024-01:
+Before you begin, ensure you have met the following requirements:
 
-- Upgrade all dependencies (still no switch to `ethers v6`, seems more and more unlikely that `@web3-react` will switch to ethers v6 anytime soon);
-- Fix Antd breaking changes;
-- Replaced `Ethereum goerli` (soon to be deprecated) by `Ethereum Sepolia` & `Arbitrum Goerli` by `Arbitrum Sepolia`;
-- Add `VerifySignature` contracts on Optimism Goerli, Arbitrum Sepolia, Fantom Opera, Fantom Testnet
-
-2023-10:
-
-- Upgrade all package dependencies (except ethers);
-- Improve `useToken` hook to fetch any ERC20 token balance/allowance/decimals/symbol;
-- Fix minor responsive issues;
-
-2023-07:
-
-- Upgrade all package dependencies;
-- Add support for Wallet-Connect v2;
-- Clean code & folders structure;
-- Improve code readability.
-- Add dark mode support
-- Add support for Optimism, Arbitrum, zkSync & Fantom networks
-
-## Table of Contents
-
-- [Update:](#update)
-- [Table of Contents](#table-of-contents)
-- [Disclaimer](#disclaimer)
-- [Description](#description)
-- [Built With](#built-with)
-- [Installation](#installation)
-  - [Make sure you have the following ready:](#make-sure-you-have-the-following-ready)
-  - [Once your config is ready, create a new repo, open your favorite code editor, and clone the repo with the following cmd:](#once-your-config-is-ready-create-a-new-repo-open-your-favorite-code-editor-and-clone-the-repo-with-the-following-cmd)
-  - [Install all package dependencies by running:](#install-all-package-dependencies-by-running)
-  - [Add your API keys in the .env file:](#add-your-api-keys-in-the-env-file)
-  - [start the web3-boilerplate:](#start-the-web3-boilerplate)
-- [Features:](#features)
-  - [⭐️ ... and don't forget to leave a star if you like it! ⭐️](#️--and-dont-forget-to-leave-a-star-if-you-like-it-️)
-
-
-## Disclaimer
-
-1. Work in progress...
-2. No Typescript expert and no React expert either, so any contribution/improvement pull request is welcomed!
-3. For a more "recent and high-level" web3 boilerplate built on [Next.js](https://nextjs.org/), [Wagmi](https://wagmi.sh/), [Viem](https://viem.sh/), and [ChakraUI](https://chakra-ui.com/), check out [Next-Web3-Boilerplate ](https://github.com/Pedrojok01/Next-Web3-Boilerplate)
-
-## Description
-
-Simple and minimalist Web3 boilerplate to boost your Dapp development. Don't waste time setting up CRA, Typescript, react-script v5 polyfill, and connecting metamask and other wallets any longer. Instead, get this web3-boilerplate and start coding right away with the latest stack available out there!
-
-Try it yourself: [https://web3-boilerplate.netlify.app/](https://web3-boilerplate.netlify.app/)
-
-## Built With
-
-- [![React][react.js]][react-url]
-- [![typescript]][typescript-url]
-- [![AntDesign]][antdesign-url]
-- [![web3react]][web3react-url]
-- [![prettier]][prettier-url]
-- [![ESLint]][eslint-url]
+- Node.js (v14.0.0 or later)
+- Yarn package manager
+- MetaMask or another Web3 wallet extension installed in your browser
 
 ## Installation
 
-### Make sure you have the following ready:
+To install the Combined Yield Manager, follow these steps:
 
-- [node.js](https://nodejs.org/) installed (developed on LTS v18)
-- [typescript](https://www.typescriptlang.org/) installed (developed on v5.2.2)
-- [yarn](https://yarnpkg.com/) installed
-- [MetaMask](https://metamask.io/) (or any web3 compatible wallet) installed in your browser
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/combined-yield-manager.git
+   cd combined-yield-manager
+   ```
 
-### Once your config is ready, create a new repo, open your favorite code editor, and clone the repo with the following cmd:
+2. Install the dependencies:
+   ```
+   yarn install
+   ```
 
-```bash
-git clone https://github.com/Pedrojok01/Web3-Boilerplate.git .
-```
+## Configuration
 
-### Install all package dependencies by running:
+1. Create a `.env` file in the root directory of the project.
+2. Add the following environment variables:
+   ```
+   REACT_APP_CONTRACT_ADDRESS=your_contract_address_here
+   REACT_APP_NETWORK_ID=your_network_id_here
+   ```
+   Replace `your_contract_address_here` with the address of your deployed Yield Manager contract and `your_network_id_here` with the appropriate network ID (e.g., 1 for Ethereum mainnet, 3 for Ropsten testnet).
 
-```bash
-yarn install
-```
+## Usage
 
-<b>IMPORTANT: Double-check your package.json to make sure you've installed the exact same version for all @web3-react packages. Since the version 8+ is still in beta, it may not be automatically installed.</b>
+To run the Combined Yield Manager locally:
 
-### Add your API keys in the .env file:
+1. Start the development server:
+   ```
+   yarn start
+   ```
 
-Create a .env file at the root of your project and copy the content of the .env.example file into it. Then, fill in the following variables:
+2. Open your web browser and navigate to `http://localhost:3000`.
 
-```js
-REACT_APP_INFURA_KEY = "your API key here";
-...
-REACT_APP_WALLETCONNECT_PROJECT_ID = "Project id needed for WalletConnect v2";
-```
+3. Connect your Web3 wallet (e.g., MetaMask) to the application.
 
-### start the web3-boilerplate:
+4. Use the interface to interact with the Yield Manager contract:
+   - Sign messages
+   - View current allocations
+   - Update price limits
+   - Withdraw from pools
 
-```bash
-yarn start
-```
+## Contributing
 
-## Features:
+Contributions to the Combined Yield Manager project are welcome. Please follow these steps to contribute:
 
-- [x] Web3 Wallet (Metamask / Wallet connect / Coinbase)
-- [x] Chain selector
-- [x] Wallet balance
-- [x] Sign Messages & Transfer Native
-- [x] Dark mode support
-- [x] Hook to query user's Token Balances
-- [ ] Hook to query user's NFTs
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature/your-feature-name`.
+3. Make your changes and commit them: `git commit -m 'Add some feature'`.
+4. Push to the branch: `git push origin feature/your-feature-name`.
+5. Submit a pull request.
 
-<br></br>
+## License
 
-<div align="center">
-<h2> Enjoy!!!</h2>
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-### ⭐️ ... and don't forget to leave a star if you like it! ⭐️
+## Contact
 
-</div>
+If you have any questions or feedback, please open an issue in the GitHub repository.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+## Acknowledgements
 
-<!-- MARKDOWN LINKS & IMAGES -->
-
-[react.js]: https://img.shields.io/badge/React_v18.2-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[react-url]: https://reactjs.org/
-[typescript]: https://img.shields.io/badge/typescript_v5.3.3-375BD2?style=for-the-badge&logo=typescript&logoColor=61DAFB
-[typescript-url]: https://www.typescriptlang.org/
-[web3react]: https://img.shields.io/badge/@web3react_v8.2-006600?style=for-the-badge&logo=web3-react&logoColor=4FC08D
-[web3react-url]: https://github.com/Uniswap/web3react#readme
-[antdesign]: https://img.shields.io/badge/AntDesign_v5.12.5-FF0000?style=for-the-badge&logo=AntDesign&logoColor=61DAFB
-[antdesign-url]: https://ant.design/
-[prettier]: https://img.shields.io/badge/Prettier-360D3A?style=for-the-badge&logo=Prettier&logoColor=61DAFB
-[prettier-url]: https://prettier.io/
-[eslint]: https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=ESLint&logoColor=61DAFB
-[eslint-url]: https://eslint.org/
+- [React](https://reactjs.org/)
+- [Ant Design](https://ant.design/)
+- [ethers.js](https://docs.ethers.io/)
+- [Web3.js](https://web3js.readthedocs.io/)
