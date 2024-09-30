@@ -1,90 +1,137 @@
-# ZK_YIELD_PANCAKe
+# ZK_YIELD_PANCAKE
 
-## Overview
+ZK_YIELD_PANCAKE is a smart contract solution that integrates zk-SNARK proof verification using Brevis' zk-Coprocessor and PancakeSwap v4 pools. It allows rebalancing liquidity pools based on price limits and zk-SNARK proof results, ensuring secure and optimized yield management for decentralized finance (DeFi) applications.
 
-The Combined Yield Manager is a React-based web application that integrates functionality for interacting with a Yield Manager smart contract on the blockchain. It provides an interface for signing messages, managing yield allocations, updating price limits, and withdrawing from pools.
+## Key Features
 
-## Features
+- **zk-SNARK Proof Verification**: Securely verifies zk-SNARK proofs using Brevis' zk-Coprocessor, ensuring the authenticity of inputs like account age and transaction history.
+- **Automated Rebalancing**: Uses PancakeSwap v4 pools and automatically rebalances pools when token prices fall below a specified threshold.
+- **Efficient Yield Management**: Optimizes yield across different liquidity pools by dynamically adjusting allocations based on zk-SNARK proofs and price data.
+- **Price Limit Mechanism**: Ensures that assets are reallocated when market prices breach predefined limits, protecting the yield against significant market changes.
 
-- Sign messages using Web3 wallet integration
-- View current yield allocations across different pools
-- Update price limits for yield management
-- Withdraw funds from specific pools
-- Responsive design using Ant Design components
+## Architecture
+
+The following is the architecture diagram for ZK_YIELD_PANCAKE, which includes the integration between PancakeSwap pools, the Brevis zk-Coprocessor, and zk-SNARK verification logic.
+
+```mermaid
+graph TD;
+    A[User] -->|Submits Proof| B[Brevis zk-Coprocessor];
+    B -->|Verifies Proof| C[ZK_YIELD_PANCAKE Contract];
+    C -->|Rebalance Trigger| D[PancakeSwap Pool];
+    D --> E[Rebalance Liquidity];
+```
 
 ## Prerequisites
 
-Before you begin, ensure you have met the following requirements:
+To run the ZK_YIELD_PANCAKE project, you'll need:
 
-- Node.js (v14.0.0 or later)
-- Yarn package manager
-- MetaMask or another Web3 wallet extension installed in your browser
+- Node.js & npm
+- Solidity 0.8.18+
+- OpenZeppelin Contracts
+- Truffle or Hardhat (for contract development)
+- Brevis zk-Coprocessor contracts
+- PancakeSwap v4 core contracts
+- A supported Ethereum-compatible network (e.g., BSC Testnet, Optimism, Base)
 
 ## Installation
 
-To install the Combined Yield Manager, follow these steps:
+1. Clone the repository from GitHub:
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/your-username/combined-yield-manager.git
-   cd combined-yield-manager
+   ```bash
+   git clone https://github.com/yourusername/ZK_YIELD_PANCAKE.git
+   cd ZK_YIELD_PANCAKE
    ```
 
-2. Install the dependencies:
+2. Install the required dependencies:
+
+   ```bash
+   npm install
    ```
-   yarn install
+
+3. Install PancakeSwap v4 core contracts from the cloned directory:
+
+   ```bash
+   cp -r pancake-v4-core/src/* ./contracts/
    ```
 
 ## Configuration
 
-1. Create a `.env` file in the root directory of the project.
-2. Add the following environment variables:
+1. Update your `truffle-config.js` or `hardhat.config.js` file to include network configurations for deploying on your chosen test network (e.g., BSC Testnet).
+
+   Example for `truffle-config.js`:
+
+   ```javascript
+   module.exports = {
+     networks: {
+       testnet: {
+         provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s1.binance.org:8545`),
+         network_id: 97,
+         gas: 5000000,
+         confirmations: 10,
+         timeoutBlocks: 200,
+         skipDryRun: true
+       },
+     },
+     compilers: {
+       solc: {
+         version: "0.8.18",
+       }
+     }
+   };
    ```
-   REACT_APP_CONTRACT_ADDRESS=your_contract_address_here
-   REACT_APP_NETWORK_ID=your_network_id_here
-   ```
-   Replace `your_contract_address_here` with the address of your deployed Yield Manager contract and `your_network_id_here` with the appropriate network ID (e.g., 1 for Ethereum mainnet, 3 for Ropsten testnet).
+
+2. Set the Brevis zk-Coprocessor contract addresses and PancakeSwap factory address in the deployment file.
 
 ## Usage
 
-To run the Combined Yield Manager locally:
+### 1. Deploy the Contracts
 
-1. Start the development server:
-   ```
-   yarn start
-   ```
+Deploy the smart contracts to your chosen network:
 
-2. Open your web browser and navigate to `http://localhost:3000`.
+```bash
+truffle migrate --network testnet
+```
 
-3. Connect your Web3 wallet (e.g., MetaMask) to the application.
+### 2. Interact with ZK_YIELD_PANCAKE
 
-4. Use the interface to interact with the Yield Manager contract:
-   - Sign messages
-   - View current allocations
-   - Update price limits
-   - Withdraw from pools
+Use a frontend (like React) or Truffle console to interact with the contract. Example:
+
+```bash
+truffle console --network testnet
+
+// Rebalance pools
+const zkYieldPancake = await ZK_YIELD_PANCAKE.deployed();
+await zkYieldPancake.checkPriceLimitAndRebalance(newAllocations, proof, publicInputs);
+```
 
 ## Contributing
 
-Contributions to the Combined Yield Manager project are welcome. Please follow these steps to contribute:
+We welcome contributions from the community! To contribute:
 
 1. Fork the repository.
-2. Create a new branch: `git checkout -b feature/your-feature-name`.
-3. Make your changes and commit them: `git commit -m 'Add some feature'`.
-4. Push to the branch: `git push origin feature/your-feature-name`.
-5. Submit a pull request.
+2. Create a new branch with your feature/fix: `git checkout -b feature-name`.
+3. Commit your changes: `git commit -m 'Add feature name'`.
+4. Push to the branch: `git push origin feature-name`.
+5. Submit a pull request to the main repository.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Contact
 
-If you have any questions or feedback, please open an issue in the GitHub repository.
+For questions, feedback, or issues, feel free to reach out via:
+
+- GitHub Issues: https://github.com/yourusername/ZK_YIELD_PANCAKE/issues
+- Email: contact@yourdomain.com
 
 ## Acknowledgements
 
-- [React](https://reactjs.org/)
-- [Ant Design](https://ant.design/)
-- [ethers.js](https://docs.ethers.io/)
-- [Web3.js](https://web3js.readthedocs.io/)
+This project is built using:
+
+- [PancakeSwap v4](https://github.com/pancakeswap)
+- [Brevis zk-Coprocessor](https://brevis.link)
+- [OpenZeppelin Contracts](https://openzeppelin.com/contracts)
+- [Solidity](https://soliditylang.org/)
+
+Special thanks to the contributors and maintainers of these libraries and frameworks!
