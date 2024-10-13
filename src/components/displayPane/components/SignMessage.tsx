@@ -4,7 +4,6 @@ import { Button, Input, message, Card, Row, Col, Typography } from "antd";
 import { useWriteContract } from "hooks";
 import { getEllipsisTxt } from "utils/formatters";
 
-// Import your contract ABI
 import YieldManagerArtifact from "./YieldManager.json";
 
 const { Title, Paragraph } = Typography;
@@ -16,7 +15,7 @@ interface PoolAllocation {
 
 interface YieldManagerABI {
   contractName: string;
-  abi: any[]; // You can replace 'any[]' with a more specific type if needed
+  abi: any[];
 }
 
 declare global {
@@ -59,7 +58,8 @@ const YieldManagerInterface: FC = () => {
 
           const allocations: PoolAllocation[] = [];
           let index = 0;
-          while (true) {
+          const moreAllocations = true;
+          while (moreAllocations) {
             try {
               const allocation = await yieldManagerContract.currentAllocations(index);
               allocations.push({
@@ -101,8 +101,6 @@ const YieldManagerInterface: FC = () => {
   const handleUpdatePriceLimit = async () => {
     if (contract && newPriceLimit) {
       try {
-        // Note: The contract doesn't have an updatePriceLimit function
-        // You might need to implement this function or use a different approach
         messageApi.error("Updating price limit is not supported by the contract");
       } catch (error) {
         console.error("Error updating price limit:", error);
@@ -114,8 +112,6 @@ const YieldManagerInterface: FC = () => {
   const handleWithdraw = async () => {
     if (contract && withdrawPool && withdrawAmount) {
       try {
-        // Note: The contract doesn't have a withdrawFromPool function
-        // You might need to implement this function or use a different approach
         messageApi.error("Withdrawing from pool is not supported by the contract");
       } catch (error) {
         console.error("Error withdrawing from pool:", error);
