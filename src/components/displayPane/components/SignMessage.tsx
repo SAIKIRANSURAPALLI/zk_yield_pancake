@@ -133,7 +133,7 @@ const YieldManagerInterface: FC = () => {
               placeholder="Input message to sign"
               style={{ marginBottom: "16px" }}
             />
-            <Button type="primary" onClick={handleSignMessage} loading={signLoading}>
+            <Button type="primary" onClick={handleSignMessage} loading={signLoading} style={{ marginLeft: "140px" }}>
               Sign Message
             </Button>
           </Card>
@@ -149,14 +149,14 @@ const YieldManagerInterface: FC = () => {
         </Col>
         <Col xs={24} md={12}>
           <Card title="Price Limit">
-            <Paragraph>Current Price Limit: {priceLimit}</Paragraph>
+            <Paragraph style={{ marginLeft: "-170px" }}>Current Price Limit: {priceLimit}</Paragraph>
             <Input
               value={newPriceLimit}
               onChange={(e) => setNewPriceLimit(e.target.value)}
               placeholder="New Price Limit"
               style={{ marginBottom: "16px" }}
             />
-            <Button type="primary" onClick={handleUpdatePriceLimit}>
+            <Button type="primary" onClick={handleUpdatePriceLimit} style={{ marginLeft: "140px" }}>
               Update Price Limit
             </Button>
           </Card>
@@ -175,7 +175,7 @@ const YieldManagerInterface: FC = () => {
               placeholder="Amount to Withdraw"
               style={{ marginBottom: "16px" }}
             />
-            <Button type="primary" onClick={handleWithdraw}>
+            <Button type="primary" onClick={handleWithdraw} style={{ marginLeft: "140px" }}>
               Withdraw
             </Button>
           </Card>
