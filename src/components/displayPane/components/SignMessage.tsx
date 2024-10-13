@@ -1,14 +1,16 @@
 import React, { FC, MouseEvent, useState, useEffect, ReactElement } from "react";
 import { ethers } from "ethers";
-import { Button, Input, message, Card, Row, Col } from "antd";
+import { Button, Input, message, Card, Row, Col, Typography } from "antd";
 import { useWriteContract } from "hooks";
 import { getEllipsisTxt } from "utils/formatters";
-import Paragraph from "antd/es/skeleton/Paragraph";
-import Title from "antd/es/skeleton/Title";
+
+const { Title, Paragraph } = Typography;
+
 interface PoolAllocation {
   pool: string;
   amount: string;
 }
+
 const SignMessage: FC = (): ReactElement => {
   const [messageApi, contextHolder] = message.useMessage();
   const { loading: signLoading, signMessage } = useWriteContract();
@@ -24,14 +26,14 @@ const SignMessage: FC = (): ReactElement => {
     const initContract = async () => {
       if (typeof window.ethereum !== "undefined") {
         await window.ethereum.request({ method: "eth_requestAccounts" });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
         const contractAddress = "0x1234567890123456789012345678901234567890"; // Replace with actual deployed contract address
         const yieldManagerContract = new ethers.Contract(contractAddress, YieldManagerABI, signer);
         setContract(yieldManagerContract);
 
         const limit = await yieldManagerContract.priceLimit();
-        setPriceLimit(ethers.utils.formatEther(limit));
+        setPriceLimit(ethers.formatEther(limit));
 
         const allocations: PoolAllocation[] = [];
         let index = 0;
@@ -40,7 +42,7 @@ const SignMessage: FC = (): ReactElement => {
             const allocation = await yieldManagerContract.currentAllocations(index);
             allocations.push({
               pool: allocation.pool,
-              amount: ethers.utils.formatEther(allocation.amount)
+              amount: ethers.formatEther(allocation.amount)
             });
             index++;
           } catch (error) {
@@ -73,7 +75,7 @@ const SignMessage: FC = (): ReactElement => {
   const handleUpdatePriceLimit = async () => {
     if (contract && newPriceLimit) {
       try {
-        const tx = await contract.updatePriceLimit(ethers.utils.parseEther(newPriceLimit));
+        const tx = await contract.updatePriceLimit(ethers.parseEther(newPriceLimit));
         await tx.wait();
         setPriceLimit(newPriceLimit);
         setNewPriceLimit("");
@@ -88,7 +90,7 @@ const SignMessage: FC = (): ReactElement => {
   const handleWithdraw = async () => {
     if (contract && withdrawPool && withdrawAmount) {
       try {
-        const tx = await contract.withdrawFromPool(withdrawPool, ethers.utils.parseEther(withdrawAmount));
+        const tx = await contract.withdrawFromPool(withdrawPool, ethers.parseEther(withdrawAmount));
         await tx.wait();
         setWithdrawPool("");
         setWithdrawAmount("");

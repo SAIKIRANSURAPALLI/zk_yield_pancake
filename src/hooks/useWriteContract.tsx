@@ -1,25 +1,24 @@
 import { useCallback, useState } from "react";
-
 import { ethers } from "ethers";
-
 import { useSignerOrProvider } from "./useSignerOrProvider";
 
 export const useWriteContract = () => {
   const { signer } = useSignerOrProvider();
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Sign Message
   const signMessage = useCallback(
     async (messageAuth: string): Promise<{ success: boolean; data: string }> => {
       setLoading(true);
-      const authMessage = messageAuth.length > 0 ? { Title: `${messageAuth}` } : { Title: "Hello Web3!" };
-
       try {
-        const transactionHash = await signer?.signMessage(authMessage.Title);
-        return { success: true, data: transactionHash ?? "" };
+        if (!signer) {
+          throw new Error("Signer not available");
+        }
+        const message = messageAuth || "Hello Web3!";
+        const signature = await signer.signMessage(message);
+        return { success: true, data: signature };
       } catch (error: any) {
-        const message = error.reason ?? error.message ?? error;
-        return { success: false, data: message };
+        console.error("Error signing message:", error);
+        return { success: false, data: error.message || "An error occurred while signing the message" };
       } finally {
         setLoading(false);
       }
@@ -27,33 +26,33 @@ export const useWriteContract = () => {
     [signer]
   );
 
-  // Transfer Native Currency
   const transferNative = useCallback(
     async (
       receiver: string,
-      amount: number
-    ): Promise<{ success: boolean; data: ethers.providers.TransactionReceipt | undefined }> => {
+      amount: string
+    ): Promise<{ success: boolean; data: ethers.TransactionReceipt | string }> => {
       setLoading(true);
       try {
-        if (!ethers.utils.isAddress(receiver)) {
-          throw new Error("Invalid address");
+        if (!signer) {
+          throw new Error("Signer not available");
         }
-        if (!amount || amount <= 0) {
+        if (!ethers.isAddress(receiver)) {
+          throw new Error("Invalid receiver address");
+        }
+        if (parseFloat(amount) <= 0) {
           throw new Error("Invalid amount");
         }
 
-        const amountToString = amount.toString();
-        const tx = {
+        const tx = await signer.sendTransaction({
           to: receiver,
-          value: ethers.utils.parseEther(amountToString)
-        };
+          value: ethers.parseEther(amount)
+        });
 
-        const transaction = await signer?.sendTransaction(tx);
-        const receipt = await transaction?.wait(2);
+        const receipt = await tx.wait(2);
         return { success: true, data: receipt };
       } catch (error: any) {
-        const message = error.reason ?? error.message ?? error;
-        return { success: false, data: message };
+        console.error("Error transferring native currency:", error);
+        return { success: false, data: error.message || "An error occurred during the transfer" };
       } finally {
         setLoading(false);
       }

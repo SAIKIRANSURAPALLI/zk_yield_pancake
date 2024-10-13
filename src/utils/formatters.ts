@@ -1,11 +1,12 @@
-import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
+import { formatUnits, parseUnits } from "ethers";
 
+// Formatting functions for numbers and currency
 export const n6 = new Intl.NumberFormat("en-us", {
   style: "decimal",
   minimumFractionDigits: 0,
   maximumFractionDigits: 6
 });
+
 export const n4 = new Intl.NumberFormat("en-us", {
   style: "decimal",
   minimumFractionDigits: 0,
@@ -19,37 +20,43 @@ export const c2 = new Intl.NumberFormat("en-us", {
   maximumFractionDigits: 2
 });
 
-/**
- * Returns a string of form "abc...xyz"
- * @param {string} str string to string
- * @param {number} n number of chars to keep at front/end
- * @returns {string}
- */
-export const getEllipsisTxt = (str: string, n = 6) => {
-  if (str) {
-    return `${str.slice(0, n)}...${str.slice(str.length - n)}`;
-  }
-  return "";
+// Shorten a string with ellipsis
+export const getEllipsisTxt = (str: string, n = 6): string => {
+  if (!str) return "";
+  return str.length > 2 * n ? `${str.slice(0, n)}...${str.slice(-n)}` : str;
 };
 
-export const tokenValue = (value: number, decimals: number) => (decimals ? value / Math.pow(10, decimals) : value);
+// Token value conversion based on decimals
+export const tokenValue = (value: bigint, decimals: number): number => {
+  return parseFloat(formatUnits(value, decimals));
+};
 
-/**
- * Return a formatted string with the symbol at the end
- * @param {number} value integer value
- * @param {number} decimals number of decimals
- * @param {string} symbol token symbol
- * @returns {string}
- */
-export const tokenValueTxt = (value: number, decimals: number, symbol: string) =>
-  `${n4.format(tokenValue(value, decimals))} ${symbol}`;
+// Format token value as text with a symbol
+export const tokenValueTxt = (value: bigint, decimals: number, symbol: string): string => {
+  return `${n4.format(tokenValue(value, decimals))} ${symbol}`;
+};
 
-export function parseBigNumberToFloat(val: BigNumber, decimals = 18) {
-  if (!val) {
-    return 0;
-  }
+// Format a bigint with optional decimals
+export const formatBigNumber = (value: bigint, decimals = 18): string => {
+  return formatUnits(value, decimals);
+};
 
-  const formatted = formatUnits(val, decimals);
-  const parsed = parseFloat(formatted);
-  return parsed;
-}
+// Parse a string into a bigint with optional decimals
+export const parseBigNumber = (value: string, decimals = 18): bigint => {
+  return parseUnits(value, decimals);
+};
+
+// Format a number as USD currency
+export const formatUSD = (value: number): string => {
+  return c2.format(value);
+};
+
+// Shorten an Ethereum address
+export const shortenAddress = (address: string, chars = 4): string => {
+  return `${address.slice(0, chars + 2)}...${address.slice(-chars)}`;
+};
+
+// Format Unix timestamp into a readable date string
+export const formatUnixTimestamp = (timestamp: number): string => {
+  return new Date(timestamp * 1000).toLocaleString();
+};

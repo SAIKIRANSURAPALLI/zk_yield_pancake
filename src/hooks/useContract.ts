@@ -1,27 +1,29 @@
 import { useMemo } from "react";
-
 import { AddressZero } from "@ethersproject/constants";
 import { Provider } from "@ethersproject/providers";
 import { Contract, ContractInterface, Signer } from "ethers";
-import { isAddress } from "ethers/lib/utils";
+import { isAddress } from "ethers";
 
 import { useSignerOrProvider } from "./useSignerOrProvider";
 
-function getContract<T = Contract>(address: string, abi: ContractInterface, provider: Signer | Provider) {
-  return <T>(<unknown>new Contract(address, abi, provider));
+function getContract<T = Contract>(address: string, abi: ContractInterface, signerOrProvider: Signer | Provider) {
+  return new Contract(address, abi, signerOrProvider) as T;
 }
 
-export function useContract<Contract>(address: string, abi: ContractInterface) {
+export function useContract<T = Contract>(address: string, abi: ContractInterface) {
   const { provider, signer } = useSignerOrProvider();
   const signerOrProvider = signer ?? provider;
 
-  const contract = useMemo(() => {
-    if (!isAddress(address) || address === AddressZero || !signerOrProvider) {
-      console.error(`Invalid 'address' parameter '${address}'.`);
-      return undefined;
+  return useMemo(() => {
+    if (!address || !isAddress(address) || address === AddressZero || !signerOrProvider) {
+      console.error(`Invalid 'address' parameter '${address}' or missing signer/provider.`);
+      return null;
     }
-    return getContract<Contract>(address, abi, signerOrProvider);
+    try {
+      return getContract<T>(address, abi, signerOrProvider);
+    } catch (error) {
+      console.error("Failed to get contract", error);
+      return null;
+    }
   }, [address, abi, signerOrProvider]);
-
-  return contract;
 }

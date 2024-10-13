@@ -4,7 +4,8 @@ const { Paragraph } = Typography;
 
 import { CHAINS } from "data/networks";
 import { useNativeBalance, useWindowSize } from "hooks";
-import { getEllipsisTxt, parseBigNumberToFloat } from "utils/formatters";
+import { getEllipsisTxt } from "utils/formatters";
+import { formatUnits } from "ethers"; // Import formatUnits directly from ethers.js
 
 const styles = {
   display: {
@@ -22,7 +23,7 @@ const styles = {
 
 const Infos = ({ chainId }: { chainId: ReturnType<Web3ReactHooks["useChainId"]> }) => {
   const { account, provider } = useWeb3React();
-  const balance = useNativeBalance(provider, account);
+  const balance = useNativeBalance(provider, account); // Assume this returns a bigint or similar compatible type
   const { isTablet } = useWindowSize();
 
   if (chainId === undefined) return null;
@@ -56,7 +57,7 @@ const Infos = ({ chainId }: { chainId: ReturnType<Web3ReactHooks["useChainId"]> 
 
       <Paragraph style={styles.statusText}>
         Balance:{" "}
-        <span style={styles.statusValue}>{balance ? `Ξ ${parseBigNumberToFloat(balance).toFixed(4)}` : 0}</span>
+        <span style={styles.statusValue}>{balance ? `Ξ ${parseFloat(formatUnits(balance, 18)).toFixed(4)}` : 0}</span>
       </Paragraph>
     </Typography>
   );
