@@ -38,7 +38,7 @@ To run the ZK_YIELD_PANCAKE project, you'll need:
 1. Clone the repository from GitHub:
 
    ```bash
-   git clone https://github.com/yourusername/ZK_YIELD_PANCAKE.git
+   git clone https://github.com/SAIKIRANSURAPALLI/ZK_YIELD_PANCAKE.git
    cd ZK_YIELD_PANCAKE
    ```
 
@@ -70,11 +70,11 @@ To run the ZK_YIELD_PANCAKE project, you'll need:
          confirmations: 10,
          timeoutBlocks: 200,
          skipDryRun: true
-       },
+       }
      },
      compilers: {
        solc: {
-         version: "0.8.18",
+         version: "0.8.18"
        }
      }
    };
@@ -122,8 +122,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 For questions, feedback, or issues, feel free to reach out via:
 
-- GitHub Issues: https://github.com/yourusername/ZK_YIELD_PANCAKE/issues
-- Email: contact@yourdomain.com
+- GitHub Issues: https://github.com/SAIKIRANSURAPALLI/ZK_YIELD_PANCAKE/issues
+- Email: surapallisaikiran@gmail.com
 
 ## Acknowledgements
 

@@ -1,11 +1,8 @@
-import { MouseEvent, useState } from "react";
-
+import React, { MouseEvent, useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Button, InputNumber, message } from "antd";
-
 import { useNativeBalance, useWriteContract } from "hooks";
-import { getEllipsisTxt, parseBigNumberToFloat } from "utils/formatters";
-
+import { getEllipsisTxt } from "utils/formatters";
 import AddressInput from "../../AddressInput";
 
 const styles = {
@@ -15,13 +12,21 @@ const styles = {
   }
 } as const;
 
+interface TransferResult {
+  success: boolean;
+  data: string | { transactionHash?: string };
+}
+
 const TransferEth: React.FC = () => {
   const { account, provider } = useWeb3React();
   const [messageApi, contextHolder] = message.useMessage();
   const { loading, transferNative } = useWriteContract();
+
   const balance = useNativeBalance(provider, account);
-  const [amount, setAmount] = useState<number | null>();
-  const [receiver, setReceiver] = useState<string>();
+  const formattedBalance = balance ? Number(balance.toString()) : 0;
+
+  const [amount, setAmount] = useState<number | null>(null);
+  const [receiver, setReceiver] = useState<string | undefined>();
 
   const handleTransfer = async (event: MouseEvent<HTMLButtonElement>): Promise<void> => {
     event.preventDefault();
@@ -41,14 +46,13 @@ const TransferEth: React.FC = () => {
       return;
     }
 
-    const { success, data } = await transferNative(receiver, amount);
+    const { success, data } = (await transferNative(receiver, amount.toString())) as TransferResult;
 
     if (success) {
-      messageApi.success(
-        `Success! Transaction Hash: ${getEllipsisTxt(data?.transactionHash ?? "Transactions Hash missing.", 8)}`
-      );
+      const txHash = typeof data === "string" ? data : data?.transactionHash;
+      messageApi.success(`Success! Transaction Hash: ${getEllipsisTxt(txHash ?? "Transaction Hash missing.", 8)}`);
     } else {
-      messageApi.error(`An error occurred: ${data}`);
+      messageApi.error(`An error occurred: ${JSON.stringify(data)}`);
     }
   };
 
@@ -63,7 +67,7 @@ const TransferEth: React.FC = () => {
             onChange={setAmount}
             placeholder="Amount to transfer"
             min={0}
-            max={balance ? parseBigNumberToFloat(balance) : 0}
+            max={formattedBalance}
             style={{ width: "100%", height: "80%", marginBlock: "auto" }}
           />
 

@@ -25,7 +25,6 @@ export const useWriteContract = () => {
     },
     [signer]
   );
-
   const transferNative = useCallback(
     async (
       receiver: string,
@@ -49,6 +48,9 @@ export const useWriteContract = () => {
         });
 
         const receipt = await tx.wait(2);
+        if (receipt === null) {
+          throw new Error("Transaction was not mined within 2 blocks, please check on the network");
+        }
         return { success: true, data: receipt };
       } catch (error: any) {
         console.error("Error transferring native currency:", error);

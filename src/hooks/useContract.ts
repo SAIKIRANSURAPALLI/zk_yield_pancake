@@ -7,7 +7,7 @@ import { isAddress } from "ethers";
 import { useSignerOrProvider } from "./useSignerOrProvider";
 
 function getContract<T = Contract>(address: string, abi: ContractInterface, signerOrProvider: Signer | Provider) {
-  return new Contract(address, abi, signerOrProvider) as T;
+  return new Contract(address, abi as any, signerOrProvider as any) as T;
 }
 
 export function useContract<T = Contract>(address: string, abi: ContractInterface) {

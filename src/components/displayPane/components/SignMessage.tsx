@@ -1,8 +1,11 @@
-import React, { FC, MouseEvent, useState, useEffect, ReactElement } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { Button, Input, message, Card, Row, Col, Typography } from "antd";
 import { useWriteContract } from "hooks";
 import { getEllipsisTxt } from "utils/formatters";
+
+// Import your contract ABI
+import YieldManagerArtifact from "./YieldManager.json";
 
 const { Title, Paragraph } = Typography;
 
@@ -11,7 +14,22 @@ interface PoolAllocation {
   amount: string;
 }
 
-const SignMessage: FC = (): ReactElement => {
+interface YieldManagerABI {
+  contractName: string;
+  abi: any[]; // You can replace 'any[]' with a more specific type if needed
+}
+
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string }) => Promise<string[]>;
+      on: (event: string, callback: () => void) => void;
+      removeListener: (event: string, callback: () => void) => void;
+    } & ethers.Eip1193Provider;
+  }
+}
+
+const YieldManagerInterface: FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const { loading: signLoading, signMessage } = useWriteContract();
   const [messageAuth, setMessageAuth] = useState<string>("");
@@ -25,42 +43,50 @@ const SignMessage: FC = (): ReactElement => {
   useEffect(() => {
     const initContract = async () => {
       if (typeof window.ethereum !== "undefined") {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const contractAddress = "0x1234567890123456789012345678901234567890"; // Replace with actual deployed contract address
-        const yieldManagerContract = new ethers.Contract(contractAddress, YieldManagerABI, signer);
-        setContract(yieldManagerContract);
+        try {
+          await window.ethereum.request({ method: "eth_requestAccounts" });
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+          const contractAddress = "0x1234567890123456789012345678901234567890";
 
-        const limit = await yieldManagerContract.priceLimit();
-        setPriceLimit(ethers.formatEther(limit));
+          // Use the correct type for the artifact
+          const artifact: YieldManagerABI = YieldManagerArtifact;
+          const yieldManagerContract = new ethers.Contract(contractAddress, artifact.abi, signer);
+          setContract(yieldManagerContract);
 
-        const allocations: PoolAllocation[] = [];
-        let index = 0;
-        while (true) {
-          try {
-            const allocation = await yieldManagerContract.currentAllocations(index);
-            allocations.push({
-              pool: allocation.pool,
-              amount: ethers.formatEther(allocation.amount)
-            });
-            index++;
-          } catch (error) {
-            break;
+          const limit = await yieldManagerContract.priceLimit();
+          setPriceLimit(ethers.formatEther(limit));
+
+          const allocations: PoolAllocation[] = [];
+          let index = 0;
+          while (true) {
+            try {
+              const allocation = await yieldManagerContract.currentAllocations(index);
+              allocations.push({
+                pool: allocation.pool,
+                amount: ethers.formatEther(allocation.amount)
+              });
+              index++;
+            } catch (error) {
+              break;
+            }
           }
+          setCurrentAllocations(allocations);
+        } catch (error) {
+          console.error("Failed to initialize contract:", error);
+          messageApi.error("Failed to initialize contract");
         }
-        setCurrentAllocations(allocations);
       }
     };
 
     initContract();
-  }, []);
+  }, [messageApi]);
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessageAuth(e.target.value);
   };
 
-  const handleSignMessage = async (event: MouseEvent<HTMLButtonElement>): Promise<void> => {
+  const handleSignMessage = async (event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
     event.preventDefault();
 
     const { success, data } = await signMessage(messageAuth);
@@ -75,11 +101,9 @@ const SignMessage: FC = (): ReactElement => {
   const handleUpdatePriceLimit = async () => {
     if (contract && newPriceLimit) {
       try {
-        const tx = await contract.updatePriceLimit(ethers.parseEther(newPriceLimit));
-        await tx.wait();
-        setPriceLimit(newPriceLimit);
-        setNewPriceLimit("");
-        messageApi.success("Price limit updated successfully");
+        // Note: The contract doesn't have an updatePriceLimit function
+        // You might need to implement this function or use a different approach
+        messageApi.error("Updating price limit is not supported by the contract");
       } catch (error) {
         console.error("Error updating price limit:", error);
         messageApi.error("Failed to update price limit");
@@ -90,11 +114,9 @@ const SignMessage: FC = (): ReactElement => {
   const handleWithdraw = async () => {
     if (contract && withdrawPool && withdrawAmount) {
       try {
-        const tx = await contract.withdrawFromPool(withdrawPool, ethers.parseEther(withdrawAmount));
-        await tx.wait();
-        setWithdrawPool("");
-        setWithdrawAmount("");
-        messageApi.success("Withdrawal successful");
+        // Note: The contract doesn't have a withdrawFromPool function
+        // You might need to implement this function or use a different approach
+        messageApi.error("Withdrawing from pool is not supported by the contract");
       } catch (error) {
         console.error("Error withdrawing from pool:", error);
         messageApi.error("Failed to withdraw from pool");
@@ -103,70 +125,68 @@ const SignMessage: FC = (): ReactElement => {
   };
 
   return (
-    <>
-      <div style={{ padding: "24px" }}>
-        {contextHolder}
-        <Title level={2}>Combined Yield Manager Interface</Title>
-        <Row gutter={[16, 16]}>
-          <Col xs={24} md={12}>
-            <Card title="Sign Message">
-              <Input.TextArea
-                value={messageAuth}
-                onChange={handleMessageChange}
-                placeholder="Input message to sign"
-                style={{ marginBottom: "16px" }}
-              />
-              <Button type="primary" onClick={handleSignMessage} loading={signLoading}>
-                Sign Message
-              </Button>
-            </Card>
-          </Col>
-          <Col xs={24} md={12}>
-            <Card title="Current Allocations">
-              {currentAllocations.map((allocation, index) => (
-                <Paragraph key={index}>
-                  Pool: {allocation.pool}, Amount: {allocation.amount}
-                </Paragraph>
-              ))}
-            </Card>
-          </Col>
-          <Col xs={24} md={12}>
-            <Card title="Price Limit">
-              <Paragraph>Current Price Limit: {priceLimit}</Paragraph>
-              <Input
-                value={newPriceLimit}
-                onChange={(e) => setNewPriceLimit(e.target.value)}
-                placeholder="New Price Limit"
-                style={{ marginBottom: "16px" }}
-              />
-              <Button type="primary" onClick={handleUpdatePriceLimit}>
-                Update Price Limit
-              </Button>
-            </Card>
-          </Col>
-          <Col xs={24} md={12}>
-            <Card title="Withdraw from Pool">
-              <Input
-                value={withdrawPool}
-                onChange={(e) => setWithdrawPool(e.target.value)}
-                placeholder="Pool Address"
-                style={{ marginBottom: "16px" }}
-              />
-              <Input
-                value={withdrawAmount}
-                onChange={(e) => setWithdrawAmount(e.target.value)}
-                placeholder="Amount to Withdraw"
-                style={{ marginBottom: "16px" }}
-              />
-              <Button type="primary" onClick={handleWithdraw}>
-                Withdraw
-              </Button>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    </>
+    <div style={{ padding: "24px" }}>
+      {contextHolder}
+      <Title level={2}>Yield Manager Interface</Title>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} md={12}>
+          <Card title="Sign Message">
+            <Input.TextArea
+              value={messageAuth}
+              onChange={handleMessageChange}
+              placeholder="Input message to sign"
+              style={{ marginBottom: "16px" }}
+            />
+            <Button type="primary" onClick={handleSignMessage} loading={signLoading}>
+              Sign Message
+            </Button>
+          </Card>
+        </Col>
+        <Col xs={24} md={12}>
+          <Card title="Current Allocations">
+            {currentAllocations.map((allocation, index) => (
+              <Paragraph key={index}>
+                Pool: {allocation.pool}, Amount: {allocation.amount}
+              </Paragraph>
+            ))}
+          </Card>
+        </Col>
+        <Col xs={24} md={12}>
+          <Card title="Price Limit">
+            <Paragraph>Current Price Limit: {priceLimit}</Paragraph>
+            <Input
+              value={newPriceLimit}
+              onChange={(e) => setNewPriceLimit(e.target.value)}
+              placeholder="New Price Limit"
+              style={{ marginBottom: "16px" }}
+            />
+            <Button type="primary" onClick={handleUpdatePriceLimit}>
+              Update Price Limit
+            </Button>
+          </Card>
+        </Col>
+        <Col xs={24} md={12}>
+          <Card title="Withdraw from Pool">
+            <Input
+              value={withdrawPool}
+              onChange={(e) => setWithdrawPool(e.target.value)}
+              placeholder="Pool Address"
+              style={{ marginBottom: "16px" }}
+            />
+            <Input
+              value={withdrawAmount}
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+              placeholder="Amount to Withdraw"
+              style={{ marginBottom: "16px" }}
+            />
+            <Button type="primary" onClick={handleWithdraw}>
+              Withdraw
+            </Button>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 };
 
-export default SignMessage;
+export default YieldManagerInterface;
