@@ -1,14 +1,13 @@
 const YieldManager = artifacts.require("YieldManager");
 
-module.exports = function (deployer, network, accounts) {
-  // Update these addresses for Sepolia
-  const zkCoprocessor = "0xF7E9CB6b7A157c14BCB6E6bcf63c1C7c92E952f5"; // BrevisRequest contract on Sepolia (replace with actual address)
-  const brevisProof = "0x2241C52472862038dFFdAb38b88410CAC2685D15"; // BrevisProof contract on Sepolia (replace with actual address)
-  const pancakeFactory = "0x2Aa22c502cc0d5206Cd1dC7945f641FA1C3807D9"; // PancakeSwap v4 Factory (ensure this is available on Sepolia or use a test version)
-  const positionManager = "0x9e85391B63aC2E4eBa7352DdaB7e6042476813C7"; // Actual Position Manager address on Sepolia (replace with actual address)
-  const baseToken = "0xe9e7cea3dedca5984780bafc599bd69add087d56"; // BUSD or its equivalent on Sepolia (replace with actual address)
-  const priceLimit = "2000000000000000000"; // 2 tokens (adjust as needed)
-
-  // Deploy the YieldManager contract with updated addresses
-  deployer.deploy(YieldManager, zkCoprocessor, pancakeFactory, positionManager, baseToken, priceLimit, brevisProof);
+module.exports = function (deployer) {
+  deployer.deploy(
+    YieldManager,
+    "0x841ce48F9446C8E281D3F1444cB859b4A6D0738C", // zkCoprocessor address (mock address)
+    "0xa9b361df352a80ba3213c656b4efa5436ec80362", // vault address (mock address)
+    "0x6F9302eE8760c764d775B1550C65468Ec4C25Dfc", // clPoolManager address (mock address)
+    "0xc0270E12dd2bCF9A22A928af6047e247508E5615", // binPoolManager address (mock address)
+    "0x1a9fA3A74590AC1af1bB0Bc8e021Ef91aBF1A4C5", // baseToken address (mock address)
+    "1000000000000000000" // priceLimit (1 ether)
+  );
 };
