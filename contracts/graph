@@ -1,0 +1,152 @@
+digraph G {
+  graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
+  node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
+  edge [ color = "#fcfcfc", penwidth =2, fontname = "helvetica Neue Ultra Light" ];
+subgraph "clusterIVault" {
+  graph [ label = "IVault  (iface)", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "IVault.deposit" [ label = "deposit", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IVault.withdraw" [ label = "withdraw", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IVault.balanceOf" [ label = "balanceOf", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IVault.totalAssets" [ label = "totalAssets", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IVault.convertToShares" [ label = "convertToShares", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IVault.convertToAssets" [ label = "convertToAssets", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+}
+
+subgraph "clusterICLPoolManager" {
+  graph [ label = "ICLPoolManager  (iface)", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "ICLPoolManager.poolExists" [ label = "poolExists" ];
+  "ICLPoolManager.createPool" [ label = "createPool", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "ICLPoolManager.addLiquidity" [ label = "addLiquidity" ];
+  "ICLPoolManager.removeLiquidity" [ label = "removeLiquidity", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "ICLPoolManager.swap" [ label = "swap", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "ICLPoolManager.getPrice" [ label = "getPrice" ];
+  "ICLPoolManager.getPoolLiquidity" [ label = "getPoolLiquidity", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "ICLPoolManager.getPoolTickSpacing" [ label = "getPoolTickSpacing", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+}
+
+subgraph "clusterIBinPoolManager" {
+  graph [ label = "IBinPoolManager  (iface)", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "IBinPoolManager.poolExists" [ label = "poolExists" ];
+  "IBinPoolManager.createPool" [ label = "createPool", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IBinPoolManager.addLiquidity" [ label = "addLiquidity" ];
+  "IBinPoolManager.removeLiquidity" [ label = "removeLiquidity", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IBinPoolManager.swap" [ label = "swap", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IBinPoolManager.getPrice" [ label = "getPrice", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IBinPoolManager.getPoolBinStep" [ label = "getPoolBinStep", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IBinPoolManager.getPoolReserves" [ label = "getPoolReserves", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+}
+
+subgraph "clusterYieldManager" {
+  graph [ label = "YieldManager", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "YieldManager.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "YieldManager.updateYieldStrategy" [ label = "updateYieldStrategy", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "YieldManager.checkPriceLimitAndRebalance" [ label = "checkPriceLimitAndRebalance", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "YieldManager.rebalancePools" [ label = "rebalancePools" ];
+  "YieldManager.addLiquidityToCLPool" [ label = "addLiquidityToCLPool" ];
+  "YieldManager.addLiquidityToBinPool" [ label = "addLiquidityToBinPool" ];
+  "YieldManager.getPriceFromPool" [ label = "getPriceFromPool" ];
+  "YieldManager.claimYield" [ label = "claimYield", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "YieldManager.updatePriceLimit" [ label = "updatePriceLimit", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+}
+
+subgraph "clusterIERC20" {
+  graph [ label = "IERC20  (iface)", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "IERC20.totalSupply" [ label = "totalSupply", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IERC20.balanceOf" [ label = "balanceOf", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IERC20.transfer" [ label = "transfer", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IERC20.allowance" [ label = "allowance", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IERC20.approve" [ label = "approve", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IERC20.transferFrom" [ label = "transferFrom", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+}
+
+subgraph "clusterOwnable" {
+  graph [ label = "Ownable", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "Ownable.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "Ownable.onlyOwner" [ label = "onlyOwner", color = "#1bc6a6", shape =doubleoctagon ];
+  "Ownable.owner" [ label = "owner" ];
+  "Ownable._checkOwner" [ label = "_checkOwner" ];
+  "Ownable.renounceOwnership" [ label = "renounceOwnership", color = "#FF9797", fillcolor = "#FF9797" ];
+  "Ownable.transferOwnership" [ label = "transferOwnership", color = "#FF9797", fillcolor = "#FF9797" ];
+  "Ownable._transferOwnership" [ label = "_transferOwnership" ];
+  "Ownable._msgSender" [ label = "_msgSender" ];
+}
+
+subgraph "clusterContext" {
+  graph [ label = "Context", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "Context._msgSender" [ label = "_msgSender", color = "#f2c383", fillcolor = "#f2c383" ];
+  "Context._msgData" [ label = "_msgData", color = "#f2c383", fillcolor = "#f2c383" ];
+}
+
+subgraph "clusterIZKCoprocessor" {
+  graph [ label = "IZKCoprocessor  (iface)", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "IZKCoprocessor.verifyStrategyProof" [ label = "verifyStrategyProof", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "IZKCoprocessor.verifyRebalanceProof" [ label = "verifyRebalanceProof", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+}
+
+  "YieldManager.updateYieldStrategy";
+  "IZKCoprocessor.verifyStrategyProof";
+  "YieldManager.checkPriceLimitAndRebalance";
+  "YieldManager.getPriceFromPool";
+  "IZKCoprocessor.verifyRebalanceProof";
+  "YieldManager.rebalancePools";
+  "ICLPoolManager.poolExists";
+  "YieldManager.addLiquidityToCLPool";
+  "IBinPoolManager.poolExists";
+  "YieldManager.addLiquidityToBinPool";
+  "ICLPoolManager.addLiquidity";
+  "IBinPoolManager.addLiquidity";
+  "ICLPoolManager.getPrice";
+  "Ownable.<Constructor>";
+  "Ownable._transferOwnership";
+  "Ownable._msgSender";
+  "Ownable.onlyOwner";
+  "Ownable._checkOwner";
+  "Ownable.owner";
+  "Ownable.renounceOwnership";
+  "Ownable.transferOwnership";
+  "YieldManager.updateYieldStrategy" -> "IZKCoprocessor.verifyStrategyProof" [ color = "white" ];
+  "YieldManager.checkPriceLimitAndRebalance" -> "YieldManager.getPriceFromPool" [ color = "#1bc6a6" ];
+  "YieldManager.checkPriceLimitAndRebalance" -> "IZKCoprocessor.verifyRebalanceProof" [ color = "white" ];
+  "YieldManager.checkPriceLimitAndRebalance" -> "YieldManager.rebalancePools" [ color = "#1bc6a6" ];
+  "YieldManager.rebalancePools" -> "ICLPoolManager.poolExists" [ color = "white" ];
+  "YieldManager.rebalancePools" -> "YieldManager.addLiquidityToCLPool" [ color = "#1bc6a6" ];
+  "YieldManager.rebalancePools" -> "IBinPoolManager.poolExists" [ color = "white" ];
+  "YieldManager.rebalancePools" -> "YieldManager.addLiquidityToBinPool" [ color = "#1bc6a6" ];
+  "YieldManager.addLiquidityToCLPool" -> "ICLPoolManager.addLiquidity" [ color = "white" ];
+  "YieldManager.addLiquidityToBinPool" -> "IBinPoolManager.addLiquidity" [ color = "white" ];
+  "YieldManager.getPriceFromPool" -> "ICLPoolManager.getPrice" [ color = "white" ];
+  "Ownable.<Constructor>" -> "Ownable._transferOwnership" [ color = "#1bc6a6" ];
+  "Ownable.<Constructor>" -> "Ownable._msgSender" [ color = "#1bc6a6" ];
+  "Ownable.onlyOwner" -> "Ownable._checkOwner" [ color = "#1bc6a6" ];
+  "Ownable._checkOwner" -> "Ownable.owner" [ color = "#1bc6a6" ];
+  "Ownable._checkOwner" -> "Ownable._msgSender" [ color = "#1bc6a6" ];
+  "Ownable.renounceOwnership" -> "Ownable._transferOwnership" [ color = "#1bc6a6" ];
+  "Ownable.transferOwnership" -> "Ownable._transferOwnership" [ color = "#1bc6a6" ];
+
+
+rankdir=LR
+node [shape=plaintext]
+subgraph cluster_01 { 
+label = "Legend";
+key [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td align="right" port="i1">Internal Call</td></tr>
+  <tr><td align="right" port="i2">External Call</td></tr>
+  <tr><td align="right" port="i3">Defined Contract</td></tr>
+  <tr><td align="right" port="i4">Undefined Contract</td></tr>
+  </table>>]
+key2 [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td port="i1">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i2">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i3" bgcolor="#445773">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i4">
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="7" color="#e8726d">
+      <tr>
+       <td></td>
+      </tr>
+     </table>
+  </td></tr>
+  </table>>]
+key:i1:e -> key2:i1:w [color="#1bc6a6"]
+key:i2:e -> key2:i2:w [color="white"]
+}
+}
